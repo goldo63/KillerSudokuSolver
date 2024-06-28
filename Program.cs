@@ -16,6 +16,8 @@ namespace KillerSudokuSolver
 
             var sudoku = new Model();
             sudoku.Variables = new Variable[9*9];
+            sudoku.Constraints = [];
+
             for (int i = 0; i < 9 * 9; i++)
             {
                 sudoku.Variables[i] = new Variable();
@@ -23,7 +25,8 @@ namespace KillerSudokuSolver
                 sudoku.Variables[i].Domain = sudokuDomains.Copy();
             }
 
-            AllDifferentConstraint rows;
+
+
             for (int i = 0; i < 9 * 9; i += 9)
             {
                 var row = new Variable[9];
@@ -31,23 +34,24 @@ namespace KillerSudokuSolver
                 {
                     row[j] = sudoku.Variables[i + j];
                 }
-                rows = new AllDifferentConstraint(row);
+                AllDifferentConstraint rows = new AllDifferentConstraint(row);
                 sudoku.Constraints.Append(rows);
             }
 
-            AllDifferentConstraint columns;
+
+            // set columns constraint
             for (int i = 0; i < 9; i++)
             {
                 var col = new Variable[9];
                 for (int j = 0; j < 9 * 9; j += 9)
                 {
-                    col[j] = sudoku.Variables[i + j];
+                    col[j/9] = sudoku.Variables[i + j];
                 }
-                columns = new AllDifferentConstraint(col);
+                AllDifferentConstraint columns = new AllDifferentConstraint(col);
                 sudoku.Constraints.Append(columns);
             }
 
-
+            // set squares constraint
             var sqrs = new List<int[]>
             {
                 new int[9] { 0, 1, 2, 9, 10, 11, 18, 19, 20 },
@@ -60,7 +64,6 @@ namespace KillerSudokuSolver
                 new int[9] { 57, 58, 59, 66, 67, 68, 75, 76, 77 },
                 new int[9] { 60, 61, 62, 69, 70, 71, 78, 79, 80 }
             };
-            AllDifferentConstraint squares;
             for (int i = 0; i < 9; i++)
             {
                 var square = new Variable[9];
@@ -68,7 +71,7 @@ namespace KillerSudokuSolver
                 {
                     square[j] = sudoku.Variables[sqrs[i][j]];
                 }
-                squares = new AllDifferentConstraint(square);
+                AllDifferentConstraint squares = new AllDifferentConstraint(square);
                 sudoku.Constraints.Append(squares);
             }
 
@@ -86,8 +89,9 @@ namespace KillerSudokuSolver
                 }
             }
 
-
             KillerSudokuKiller killer = new KillerSudokuKiller(sudoku);
+
+            killer.Solve();
 
             Console.WriteLine("END");
         }

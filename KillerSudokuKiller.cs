@@ -56,7 +56,7 @@ public class KillerSudokuKiller
         return false;
     }
 
-    private bool ForwardCheck(Variable var) => model.Constraints.Where(c => c.Variables.Contains(var)).All(c => c.Propogate());
+    private bool ForwardCheck(Variable var) => model.Constraints.Where(c => c.Variables.Contains(var)).All(c => c.Propogate(var));
 
     private Variable? GetNextVariable() => model.Variables.Where(v => !v.IsSet).OrderBy(v => v.Domain.values.Count).FirstOrDefault();
 }
