@@ -17,15 +17,34 @@ namespace KillerSudokuSolver.HelperClasses
         public void Print()
         {
             Console.WriteLine($"Assignments: {Assignments}");
+            Console.WriteLine($"Mistakes: {Rollbacks}");
             Console.WriteLine($"Time elapsed: {Stopwatch.Elapsed} sec.");
         }
 
-        public void PrintModel(Model model)
+        public static void PrintModel(Model model)
         {
-            foreach (var variable in model.Variables)
+            int gridSize = (int)Math.Ceiling(Math.Sqrt(model.Variables.Count()));
+            int[,] grid = new int[gridSize, gridSize];
+
+            for (int i = 0; i < model.Variables.Count(); i++)
             {
-                Console.WriteLine($"{variable.Name} {{{string.Join(", ", variable.Domain.values)}}}"
-                    + $" = {variable.Value} (Set: {variable.IsSet})");
+                int row = i / gridSize;
+                int col = i % gridSize;
+                grid[row, col] = model.Variables[i].Value;
+            }
+
+            for (int row = 0; row < gridSize; row++)
+            {
+                for (int col = 0; col < gridSize; col++)
+                {
+                    if (col > 0)
+                        Console.Write(" | ");
+
+                    Console.Write(grid[row, col].ToString().PadRight(5));
+                }
+                Console.WriteLine();
+                if (row < gridSize - 1)
+                    Console.WriteLine(new string('-', gridSize * 7 - 3));
             }
         }
     }
