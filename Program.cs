@@ -22,7 +22,7 @@ namespace KillerSudokuSolver
             {
                 sudoku.Variables[i] = new Variable();
                 sudoku.Variables[i].Name = $"Cell {i}";
-                sudoku.Variables[i].Domain = sudokuDomains.Copy();
+                sudoku.Variables[i].Domain = new Domain(sudokuDomains);
             }
 
 

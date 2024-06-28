@@ -16,6 +16,7 @@ namespace KillerSudokuSolver.HelperClasses
 
         public abstract bool IsSatisfied(Variable[] mapVariables);
         public abstract bool Propogate(Variable var);
+        public abstract Constraints Clone();
     }
 
     public class AllDifferentConstraint : Constraints
@@ -23,6 +24,16 @@ namespace KillerSudokuSolver.HelperClasses
         public AllDifferentConstraint(params Variable[] variables)
         {
             Variables = variables;
+        }
+
+        public AllDifferentConstraint(AllDifferentConstraint other)
+        {
+            Variables = other.Variables.Select(v => new Variable(v)).ToArray();
+        }
+
+        public override Constraints Clone()
+        {
+            return new AllDifferentConstraint(this);
         }
 
         public override bool IsSatisfied(Variable[] mapVariables)
@@ -66,6 +77,12 @@ namespace KillerSudokuSolver.HelperClasses
             Sum = sum;
         }
 
+        public SumEqualsConstraint(SumEqualsConstraint other)
+        {
+            Variables = other.Variables.Select(v => new Variable(v)).ToArray();
+            Sum = other.Sum;
+        }
+
         public override bool IsSatisfied(Variable[] mapVariables) => Sum == Variables.Where(v => v.IsSet).Sum(v => v.Value);
 
         // Propagates constraints to ensure the sum condition can still be satisfied
@@ -96,6 +113,11 @@ namespace KillerSudokuSolver.HelperClasses
                 if (variable.Domain.values.Count == 0) return false;
             }
             return true;
+        }
+
+        public override Constraints Clone()
+        {
+            return new SumEqualsConstraint(this);
         }
     }
 }

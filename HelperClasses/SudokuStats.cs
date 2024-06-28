@@ -16,12 +16,12 @@ namespace KillerSudokuSolver.HelperClasses
 
         public void Print()
         {
-            Console.WriteLine($"Assignments: {Assignments}");
-            Console.WriteLine($"Mistakes: {Rollbacks}");
-            Console.WriteLine($"Time elapsed: {Stopwatch.Elapsed} sec.");
+            Console.WriteLine($"    Assignments: {Assignments}");
+            Console.WriteLine($"    Mistakes: {Rollbacks}");
+            Console.WriteLine($"    Time elapsed: {Stopwatch.Elapsed} sec.");
         }
 
-        public static void PrintModel(Model model)
+        public void PrintModel(Model model)
         {
             int gridSize = (int)Math.Ceiling(Math.Sqrt(model.Variables.Count()));
             int[,] grid = new int[gridSize, gridSize];
@@ -35,16 +35,17 @@ namespace KillerSudokuSolver.HelperClasses
 
             for (int row = 0; row < gridSize; row++)
             {
+                Console.Write("    ");
                 for (int col = 0; col < gridSize; col++)
                 {
                     if (col > 0)
                         Console.Write(" | ");
 
-                    Console.Write(grid[row, col].ToString().PadRight(5));
+                    Console.Write(grid[row, col].ToString());
                 }
                 Console.WriteLine();
                 if (row < gridSize - 1)
-                    Console.WriteLine(new string('-', gridSize * 7 - 3));
+                    Console.WriteLine("    " + new string('-', gridSize * 4 - 3));
             }
         }
     }

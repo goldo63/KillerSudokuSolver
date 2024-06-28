@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,9 +20,8 @@ namespace KillerSudokuSolver.HelperClasses.ModelClasses
 
         public Model(Model modelToCopy)
         {
-            Variables = modelToCopy.Variables;
-            Constraints = modelToCopy.Constraints;
-            Name = modelToCopy.Name;
+            Variables = modelToCopy.Variables.Select(v => new Variable(v)).ToArray();
+            Constraints = modelToCopy.Constraints.Select(c => c.Clone()).ToArray();
         }
 
         public bool Validate()
@@ -41,12 +41,11 @@ namespace KillerSudokuSolver.HelperClasses.ModelClasses
     {
         public List<int> values = new List<int>();
 
+        public Domain() { }
 
-        public virtual Domain Copy()
+        public Domain(Domain other)
         {
-            var copy = (Domain)this.MemberwiseClone();
-            copy.values = this.values.ToList();
-            return copy;
+            values = new List<int>(other.values);
         }
     }
 
@@ -57,5 +56,15 @@ namespace KillerSudokuSolver.HelperClasses.ModelClasses
         public Domain Domain;
         public int Value;
         public bool IsSet;
+
+        public Variable() { }
+
+        public Variable(Variable other)
+        {
+            Name = other.Name;
+            Domain = new Domain(other.Domain);
+            Value = other.Value;
+            IsSet = other.IsSet;
+        }
     }
 }
