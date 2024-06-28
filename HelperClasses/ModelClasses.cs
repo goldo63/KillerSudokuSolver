@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace KillerSudokuSolver.HelperClasses
 {
-    internal class Model
+    internal class ModelClasses
     {
         public string Name { get; set; }
         public Variable[] Variables { get; set; }
-        public Constraint[] Constraints;
+        public Constraints[] Constraints;
 
         public bool Validate()
         {
@@ -23,5 +23,27 @@ namespace KillerSudokuSolver.HelperClasses
             }
             return true;
         }
+    }
+
+    internal class Domain
+    {
+        public List<int> values = new List<int>();
+
+
+        public virtual Domain Copy()
+        {
+            var copy = (Domain)this.MemberwiseClone();
+            copy.values = this.values.ToList();
+            return copy;
+        }
+    }
+
+    internal class Variable
+    {
+        public int Id;
+        public string Name;
+        public Domain Domain;
+        public int Value;
+        public bool IsSet;
     }
 }

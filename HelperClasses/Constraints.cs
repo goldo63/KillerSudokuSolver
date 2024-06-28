@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace KillerSudokuSolver.HelperClasses
 {
-    internal abstract class Constraint
+    internal abstract class Constraints
     {
         public Guid Id = Guid.NewGuid();
         public string Name;
@@ -15,7 +15,7 @@ namespace KillerSudokuSolver.HelperClasses
         public abstract bool IsSatisfied(Variable[] mapVariables);
     }
 
-    internal class AllDifferentConstraint : Constraint
+    internal class AllDifferentConstraint : Constraints
     {
         public AllDifferentConstraint(params Variable[] variables)
         {
@@ -37,7 +37,7 @@ namespace KillerSudokuSolver.HelperClasses
         }
     }
 
-    internal class SumEqualsConstraint : Constraint
+    internal class SumEqualsConstraint : Constraints
     {
         public int Sum;
 

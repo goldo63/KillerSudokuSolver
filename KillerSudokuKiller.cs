@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class KillerSudokuKiller
 {
-    Model model;
+    ModelClasses model;
 
     //generation settings
 
@@ -24,7 +24,7 @@ public class KillerSudokuKiller
 
         foreach (int value in values)
         { 
-        
+            
         }
 
 
