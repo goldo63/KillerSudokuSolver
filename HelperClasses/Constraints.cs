@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KillerSudokuSolver.HelperClasses.ModelClasses;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,16 +7,17 @@ using System.Threading.Tasks;
 
 namespace KillerSudokuSolver.HelperClasses
 {
-    internal abstract class Constraints
+    public abstract class Constraints
     {
         public Guid Id = Guid.NewGuid();
         public string Name;
         public Variable[] Variables;
 
         public abstract bool IsSatisfied(Variable[] mapVariables);
+        public abstract bool Propogate();
     }
 
-    internal class AllDifferentConstraint : Constraints
+    public class AllDifferentConstraint : Constraints
     {
         public AllDifferentConstraint(params Variable[] variables)
         {
@@ -35,9 +37,14 @@ namespace KillerSudokuSolver.HelperClasses
             }
             return true;
         }
+
+        public override bool Propogate()
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    internal class SumEqualsConstraint : Constraints
+    public class SumEqualsConstraint : Constraints
     {
         public int Sum;
 
@@ -54,6 +61,11 @@ namespace KillerSudokuSolver.HelperClasses
 
             if(varSum == Sum) return true;
             return false;
+        }
+
+        public override bool Propogate()
+        {
+            throw new NotImplementedException();
         }
     }
 }

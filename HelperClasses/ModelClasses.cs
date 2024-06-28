@@ -4,13 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KillerSudokuSolver.HelperClasses
+namespace KillerSudokuSolver.HelperClasses.ModelClasses
 {
-    internal class ModelClasses
+    public class Model
     {
         public string Name { get; set; }
         public Variable[] Variables { get; set; }
         public Constraints[] Constraints;
+
+        public Model() 
+        { 
+            
+        }
+
+        public Model(Model modelToCopy)
+        {
+            Variables = modelToCopy.Variables;
+            Constraints = modelToCopy.Constraints;
+            Name = modelToCopy.Name;
+        }
 
         public bool Validate()
         {
@@ -25,7 +37,7 @@ namespace KillerSudokuSolver.HelperClasses
         }
     }
 
-    internal class Domain
+    public class Domain
     {
         public List<int> values = new List<int>();
 
@@ -38,7 +50,7 @@ namespace KillerSudokuSolver.HelperClasses
         }
     }
 
-    internal class Variable
+    public class Variable
     {
         public int Id;
         public string Name;
