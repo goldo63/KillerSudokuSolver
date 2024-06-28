@@ -12,23 +12,23 @@ namespace KillerSudokuSolver.HelperClasses
     {
         public Guid Id = Guid.NewGuid();
         public string Name;
-        public Variable[] Variables;
+        public List<Variable> Variables;
 
-        public abstract bool IsSatisfied(Variable[] mapVariables);
+        public abstract bool IsSatisfied(List<Variable> mapVariables);
         public abstract bool Propogate(Variable var);
         public abstract Constraints Clone();
     }
 
     public class AllDifferentConstraint : Constraints
     {
-        public AllDifferentConstraint(params Variable[] variables)
+        public AllDifferentConstraint(List<Variable> variables)
         {
             Variables = variables;
         }
 
         public AllDifferentConstraint(AllDifferentConstraint other)
         {
-            Variables = other.Variables.Select(v => new Variable(v)).ToArray();
+            Variables = other.Variables.Select(v => new Variable(v)).ToList();
         }
 
         public override Constraints Clone()
@@ -36,10 +36,10 @@ namespace KillerSudokuSolver.HelperClasses
             return new AllDifferentConstraint(this);
         }
 
-        public override bool IsSatisfied(Variable[] mapVariables)
+        public override bool IsSatisfied(List<Variable> mapVariables)
         {
             var values = new Dictionary<int, bool>();
-            for (int i = 0; i < Variables.Length; i++)
+            for (int i = 0; i < Variables.Count; i++)
             {
                 Variable variable = mapVariables[i];
 
@@ -71,7 +71,7 @@ namespace KillerSudokuSolver.HelperClasses
     {
         public int Sum;
 
-        public SumEqualsConstraint(int sum, params Variable[] variables)
+        public SumEqualsConstraint(int sum, List<Variable> variables)
         {
             Variables = variables;
             Sum = sum;
@@ -79,11 +79,11 @@ namespace KillerSudokuSolver.HelperClasses
 
         public SumEqualsConstraint(SumEqualsConstraint other)
         {
-            Variables = other.Variables.Select(v => new Variable(v)).ToArray();
+            Variables = other.Variables.Select(v => new Variable(v)).ToList();
             Sum = other.Sum;
         }
 
-        public override bool IsSatisfied(Variable[] mapVariables) => Sum == Variables.Where(v => v.IsSet).Sum(v => v.Value);
+        public override bool IsSatisfied(List<Variable> mapVariables) => Sum == Variables.Where(v => v.IsSet).Sum(v => v.Value);
 
         // Propagates constraints to ensure the sum condition can still be satisfied
         public override bool Propogate(Variable var)

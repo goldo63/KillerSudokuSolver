@@ -10,8 +10,8 @@ namespace KillerSudokuSolver.HelperClasses.ModelClasses
     public class Model
     {
         public string Name { get; set; }
-        public Variable[] Variables { get; set; }
-        public Constraints[] Constraints;
+        public List<Variable> Variables { get; set; }
+        public List<Constraints> Constraints;
 
         public Model() 
         { 
@@ -20,13 +20,13 @@ namespace KillerSudokuSolver.HelperClasses.ModelClasses
 
         public Model(Model modelToCopy)
         {
-            Variables = modelToCopy.Variables.Select(v => new Variable(v)).ToArray();
-            Constraints = modelToCopy.Constraints.Select(c => c.Clone()).ToArray();
+            Variables = modelToCopy.Variables.Select(v => new Variable(v)).ToList();
+            Constraints = modelToCopy.Constraints.Select(c => c.Clone()).ToList();
         }
 
         public bool Validate()
         {
-            for (int i = 0; i < Constraints.Length; i++)
+            for (int i = 0; i < Constraints.Count; i++)
             {
                 if (!Constraints[i].IsSatisfied(this.Variables))
                 {

@@ -1,6 +1,7 @@
 ﻿using KillerSudokuSolver.HelperClasses;
 using KillerSudokuSolver.HelperClasses.ModelClasses;
-using System.Reflection;
+using System;
+using System.Collections.Generic;
 
 namespace KillerSudokuSolver
 {
@@ -8,25 +9,24 @@ namespace KillerSudokuSolver
     {
         static void Main(string[] args)
         {
-
             var sudokuString = "..4..5...17............4....1..5..6...34.6..........4364...397..9.17..2...1....3.";
 
             var sudokuDomains = new Domain();
-            sudokuDomains.values = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+            sudokuDomains.values = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
             var sudoku = new Model();
-            sudoku.Variables = new Variable[9*9];
-            sudoku.Constraints = [];
+            sudoku.Variables = new List<Variable>();
+            sudoku.Constraints = new List<Constraints>();
 
             for (int i = 0; i < 9 * 9; i++)
             {
-                sudoku.Variables[i] = new Variable();
-                sudoku.Variables[i].Name = $"Cell {i}";
-                sudoku.Variables[i].Domain = new Domain(sudokuDomains);
+                var variable = new Variable();
+                variable.Name = $"Cell {i}";
+                variable.Domain = new Domain(sudokuDomains);
+                sudoku.Variables.Add(variable);
             }
 
-
-
+            // Set row constraints
             for (int i = 0; i < 9 * 9; i += 9)
             {
                 var row = new Variable[9];
@@ -34,24 +34,23 @@ namespace KillerSudokuSolver
                 {
                     row[j] = sudoku.Variables[i + j];
                 }
-                AllDifferentConstraint rows = new AllDifferentConstraint(row);
-                sudoku.Constraints.Append(rows);
+                AllDifferentConstraint rows = new AllDifferentConstraint(row.ToList());
+                sudoku.Constraints.Add(rows);
             }
 
-
-            // set columns constraint
+            // Set column constraints
             for (int i = 0; i < 9; i++)
             {
                 var col = new Variable[9];
                 for (int j = 0; j < 9 * 9; j += 9)
                 {
-                    col[j/9] = sudoku.Variables[i + j];
+                    col[j / 9] = sudoku.Variables[i + j];
                 }
-                AllDifferentConstraint columns = new AllDifferentConstraint(col);
-                sudoku.Constraints.Append(columns);
+                AllDifferentConstraint columns = new AllDifferentConstraint(col.ToList());
+                sudoku.Constraints.Add(columns);
             }
 
-            // set squares constraint
+            // Set square constraints
             var sqrs = new List<int[]>
             {
                 new int[9] { 0, 1, 2, 9, 10, 11, 18, 19, 20 },
@@ -71,11 +70,11 @@ namespace KillerSudokuSolver
                 {
                     square[j] = sudoku.Variables[sqrs[i][j]];
                 }
-                AllDifferentConstraint squares = new AllDifferentConstraint(square);
-                sudoku.Constraints.Append(squares);
+                AllDifferentConstraint squares = new AllDifferentConstraint(square.ToList());
+                sudoku.Constraints.Add(squares);
             }
 
-            // Set the assigned cells from the sudoku string.
+            // Set the assigned cells from the sudoku string
             if (sudokuString.Length == 9 * 9)
             {
                 for (int i = 0; i < 9 * 9; i++)
