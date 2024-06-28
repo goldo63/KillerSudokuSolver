@@ -26,7 +26,13 @@ public class KillerSudokuKiller
             Console.WriteLine("Stats:");
             Statistics.Print();
         }
-        else Console.WriteLine("The model has been determined to be unsolvable using this algoritm.");
+        else
+        {
+            Console.WriteLine("The model has been determined to be unsolvable using this algoritm.");
+            Statistics.PrintModel(model);
+            Console.WriteLine("Stats:");
+            Statistics.Print();
+        }
     }
 
     private bool Backtrack()
