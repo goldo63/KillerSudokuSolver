@@ -1,6 +1,7 @@
 ﻿using KillerSudokuSolver.HelperClasses.ModelClasses;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace KillerSudokuSolver.HelperClasses
         public Variable[] Variables;
 
         public abstract bool IsSatisfied(Variable[] mapVariables);
-        public abstract bool Propogate();
+        public abstract bool Propogate(Variable var);
     }
 
     public class AllDifferentConstraint : Constraints
@@ -38,9 +39,20 @@ namespace KillerSudokuSolver.HelperClasses
             return true;
         }
 
-        public override bool Propogate()
+        public override bool Propogate(Variable var)
         {
-            throw new NotImplementedException();
+            foreach (var otherVariable in Variables) 
+            {
+                if (!otherVariable.IsSet && otherVariable.Domain.values.Contains(var.Value))
+                {
+                    otherVariable.Domain.values.Remove(var.Value);
+                    if (otherVariable.Domain.values.Count == 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 
@@ -54,18 +66,36 @@ namespace KillerSudokuSolver.HelperClasses
             Sum = sum;
         }
 
-        public override bool IsSatisfied(Variable[] mapVariables)
-        {
-            int varSum = 0;
-            foreach (var variable in Variables) varSum += variable.Value;
+        public override bool IsSatisfied(Variable[] mapVariables) => Sum == Variables.Where(v => v.IsSet).Sum(v => v.Value);
 
-            if(varSum == Sum) return true;
-            return false;
-        }
-
-        public override bool Propogate()
+        // Propagates constraints to ensure the sum condition can still be satisfied
+        public override bool Propogate(Variable var)
         {
-            throw new NotImplementedException();
+            // Calculate the sum of the values of the assigned variables and the remaining sum left
+            int assignedSum = Variables.Where(v => v.IsSet).Sum(v => v.Value);
+            int remainingSum = Sum - assignedSum;
+
+            // Get the list of unassigned variables
+            var unassignedVariables = Variables.Where(v => !v.IsSet).ToList();
+
+            // Calculates the min and max sum of all the possible values.
+            int minRemainingSum = unassignedVariables.Sum(v => v.Domain.values.Min());
+            int maxRemainingSum = unassignedVariables.Sum(v => v.Domain.values.Max());
+
+            //checks if the remaining sum is not inpossible
+            if (minRemainingSum > remainingSum || maxRemainingSum < remainingSum) return false;
+
+            // Update the domain of each unassigned variable to reflect possible values
+            foreach (var variable in unassignedVariables)
+            {
+                // Filter the domain values to include only those within the feasible range
+                variable.Domain.values = variable.Domain.values
+                    .Where(value => value <= remainingSum && value >= remainingSum - (maxRemainingSum - variable.Domain.values.Max()))
+                    .ToList();
+
+                if (variable.Domain.values.Count == 0) return false;
+            }
+            return true;
         }
     }
 }

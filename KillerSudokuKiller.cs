@@ -9,12 +9,12 @@ public class KillerSudokuKiller
     public SudokuStats Statistics = new SudokuStats();
     Model model;
 
+    public KillerSudokuKiller(Model model) {  this.model = model; }
+
     public void Solve()
     {
         Console.WriteLine("Attempting to solve model");
         Statistics.Stopwatch.Start();
-
-        //TODO: set up model
 
         bool solved = Backtrack();
         Statistics.Stopwatch.Stop();
@@ -31,7 +31,7 @@ public class KillerSudokuKiller
 
     private bool Backtrack()
     {
-        Model SavedModel = model;
+        Model SavedModel = new Model(model);
         Variable? nextVar = GetNextVariable();
 
         if (nextVar == null)
@@ -56,29 +56,7 @@ public class KillerSudokuKiller
         return false;
     }
 
-    private bool ForwardCheck(Variable var)
-    {
-        foreach (Constraints constraint in model.Constraints.Where(x => x.Variables.Contains(var)))
-        {
-            if (!constraint.Propogate()) return false;
-        }
-            
-        return true;
-    }
+    private bool ForwardCheck(Variable var) => model.Constraints.Where(c => c.Variables.Contains(var)).All(c => c.Propogate());
 
-    private Variable? GetNextVariable()
-    {
-        int min = int.MaxValue;
-        int id = -1;
-        for (int i = 0; i < model.Variables.Length; i++)
-        {
-            var variable = model.Variables[i];
-            if (!variable.IsSet && variable.Domain.values.Count < min)
-            {
-                min = variable.Domain.values.Count;
-                id = i;
-            }
-        }
-        return model.Variables.FirstOrDefault(x => x.Id == id);
-    }
+    private Variable? GetNextVariable() => model.Variables.Where(v => !v.IsSet).OrderBy(v => v.Domain.values.Count).FirstOrDefault();
 }
