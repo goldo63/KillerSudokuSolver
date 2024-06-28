@@ -12,7 +12,7 @@ namespace KillerSudokuSolver.HelperClasses
         public Variable[] Variables { get; set; }
         public Constraint[] Constraints;
 
-        public bool IsConsistent()
+        public bool Validate()
         {
             for (int i = 0; i < Constraints.Length; i++)
             {

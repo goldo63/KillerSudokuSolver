@@ -8,7 +8,7 @@ namespace KillerSudokuSolver.HelperClasses
 {
     internal class Domain
     {
-        List<int> values = new List<int>();
+        public List<int> values = new List<int>();
 
 
         public virtual Domain Copy()
