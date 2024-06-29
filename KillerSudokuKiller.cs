@@ -80,7 +80,7 @@ public class KillerSudokuKiller
                 Statistics.Rollbacks++;
                 model = new Model(savedModel);
 
-                nextVar.Value = -1;
+                nextVar.Value = 0;
                 nextVar.IsSet = false;
 
                 // Remove value from domain of nextVar in saved model
@@ -106,7 +106,7 @@ public class KillerSudokuKiller
 
     private bool ForwardCheck(Variable var)
     {
-        Console.WriteLine($"Performing ForwardCheck for Variable {var.Name}, Value: {var.Value}, IsSet: {var.IsSet}");
+        Console.WriteLine($"Performing ForwardCheck for Variable {var.Name}, Value: {var.Value}, IsSet: {var.IsSet}, Id: {var.Id}");
 
         // Get all constraints that involve the given variable
         var relatedConstraints = model.Constraints
@@ -127,5 +127,6 @@ public class KillerSudokuKiller
         Console.WriteLine($"ForwardCheck completed for Variable {var.Name}, Value: {var.Value}");
         return true; // All constraints satisfied, return true
     }
+    // this is a heuristic
     private Variable? GetNextVariable() => model.Variables.Where(v => !v.IsSet).OrderBy(v => v.Domain.values.Count).FirstOrDefault();
 }

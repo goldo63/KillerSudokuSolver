@@ -54,12 +54,10 @@ namespace KillerSudokuSolver.HelperClasses
             {
                 if (!otherVariable.IsSet && otherVariable.Domain.values.Contains(var.Value))
                 {
-                    // todo: actually propogate variable
-
                     otherVariable.Domain.values.Remove(var.Value);
                     if (otherVariable.Domain.values.Count == 0)
                     {
-                        // todo: set propogation to false
+                        Console.WriteLine("    AllDiff Constraint Faild!");
                         return false;
                     }
                 }
@@ -101,12 +99,14 @@ namespace KillerSudokuSolver.HelperClasses
 
             var unassignedVariables = Variables.Where(v => !v.IsSet).ToList();
 
-            if (!unassignedVariables.Where(v => v.Domain.values.Count > 0).Any()){ return false; }
-
             int minRemainingSum = unassignedVariables.Sum(v => v.Domain.values.Min());
             int maxRemainingSum = unassignedVariables.Sum(v => v.Domain.values.Max());
 
-            if (minRemainingSum > remainingSum || maxRemainingSum < remainingSum) return false;
+            if (minRemainingSum > remainingSum || maxRemainingSum < remainingSum) 
+            {
+                Console.WriteLine("    SumEqual Constraint failed! : sum did not match");
+                return false; 
+            }
 
             foreach (var variable in unassignedVariables)
             {
@@ -114,7 +114,11 @@ namespace KillerSudokuSolver.HelperClasses
                     .Where(value => value <= remainingSum && value >= remainingSum - (maxRemainingSum - variable.Domain.values.Max()))
                     .ToList();
 
-                if (variable.Domain.values.Count == 0) return false;
+                if (variable.Domain.values.Count == 0) 
+                { 
+                    Console.WriteLine("    SumEqual Constraint failed! : no domain values left");     
+                    return false; 
+                }
             }
             return true;
         }

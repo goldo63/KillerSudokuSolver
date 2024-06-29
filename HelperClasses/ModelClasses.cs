@@ -21,6 +21,7 @@ namespace KillerSudokuSolver.HelperClasses.ModelClasses
 
         public Model(Model modelToCopy)
         {
+            // copies each variable in Model
             Variables = modelToCopy.Variables.Select(v => new Variable(v)).ToList();
             Constraints = modelToCopy.Constraints.Select(c => c.Clone()).ToList();
         }

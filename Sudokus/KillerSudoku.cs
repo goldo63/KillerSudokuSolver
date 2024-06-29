@@ -29,8 +29,10 @@ namespace KillerSudokuSolver.Sudokus
             for (int i = 0; i < 9 * 9; i++)
             {
                 var variable = new Variable();
+                variable.Id = i;
                 variable.Name = $"Cell {i}";
                 variable.Domain = new Domain(killerDomains);
+                variable.Value = 0;
                 killer.Variables.Add(variable);
             }
 
@@ -143,18 +145,18 @@ namespace KillerSudokuSolver.Sudokus
             };
 
             var sums = new List<int>() { 11, 19, 6, 15, 23, 9, 12, 15, 20, 10, 10, 7, 15, 5, 14, 3, 15, 8, 17, 12, 8, 14, 9, 9, 25, 3, 4, 22, 14, 13, 7, 15, 6, 10 };
-            Console.WriteLine(cgs.Count);
-            Console.WriteLine(cgs[1].Count());
-            Console.WriteLine(cgs[1].Length);
-            Console.WriteLine(killer.Variables.Count);
-            Console.WriteLine(killer.Variables[0].Name);
-            Console.WriteLine(killer.Variables[80].Name);
+            //Console.WriteLine(cgs.Count);
+            //Console.WriteLine(cgs[1].Count());
+            //Console.WriteLine(cgs[1].Length);
+            //Console.WriteLine(killer.Variables.Count);
+            //Console.WriteLine(killer.Variables[0].Name);
+            //Console.WriteLine(killer.Variables[80].Name);
 
             foreach (var x in cgs)
             {
                 var i = 0;
                 var cage = new List<Variable>();
-                Console.WriteLine("x:" + x.Length);
+                //Console.WriteLine("x:" + x.Length);
                 foreach (int y in x)
                 {
                     var j = 0;
@@ -166,7 +168,7 @@ namespace KillerSudokuSolver.Sudokus
                 var sum = sums[i];
                 foreach (var v in cage)
                 {
-                    Console.WriteLine("var:" + v);
+                    //Console.WriteLine("var:" + v);
                 }
                 SumEqualsConstraint cagesSum = new SumEqualsConstraint(sum, cage);
                 AllDifferentConstraint cagesAllDiff = new AllDifferentConstraint(cage);
