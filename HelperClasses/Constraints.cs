@@ -54,9 +54,12 @@ namespace KillerSudokuSolver.HelperClasses
             {
                 if (!otherVariable.IsSet && otherVariable.Domain.values.Contains(var.Value))
                 {
+                    // todo: actually propogate variable
+
                     otherVariable.Domain.values.Remove(var.Value);
                     if (otherVariable.Domain.values.Count == 0)
                     {
+                        // todo: set propogation to false
                         return false;
                     }
                 }
@@ -97,6 +100,9 @@ namespace KillerSudokuSolver.HelperClasses
             int remainingSum = Sum - assignedSum;
 
             var unassignedVariables = Variables.Where(v => !v.IsSet).ToList();
+
+            if (!unassignedVariables.Where(v => v.Domain.values.Count > 0).Any()){ return false; }
+
             int minRemainingSum = unassignedVariables.Sum(v => v.Domain.values.Min());
             int maxRemainingSum = unassignedVariables.Sum(v => v.Domain.values.Max());
 
