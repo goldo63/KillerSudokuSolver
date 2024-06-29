@@ -48,5 +48,10 @@ namespace KillerSudokuSolver.HelperClasses
                     Console.WriteLine("    " + new string('-', gridSize * 4 - 3));
             }
         }
+
+        public void PrintModelState(string message, Model model, Variable var)
+        {
+            Console.WriteLine($"{message}: Variable {var.Name}, Value: {var.Value}, IsSet: {var.IsSet}");
+        }
     }
 }

@@ -11,11 +11,12 @@ namespace KillerSudokuSolver.HelperClasses.ModelClasses
     {
         public string Name { get; set; }
         public List<Variable> Variables { get; set; }
-        public List<Constraints> Constraints;
+        public List<Constraints> Constraints { get; set; }
 
-        public Model() 
-        { 
-            
+        public Model()
+        {
+            Variables = new List<Variable>();
+            Constraints = new List<Constraints>();
         }
 
         public Model(Model modelToCopy)
@@ -26,22 +27,18 @@ namespace KillerSudokuSolver.HelperClasses.ModelClasses
 
         public bool Validate()
         {
-            for (int i = 0; i < Constraints.Count; i++)
-            {
-                if (!Constraints[i].IsSatisfied(this.Variables))
-                {
-                    return false;
-                }
-            }
-            return true;
+            return Constraints.All(constraint => constraint.IsSatisfied(Variables));
         }
     }
 
     public class Domain
     {
-        public List<int> values = new List<int>();
+        public List<int> values { get; set; }
 
-        public Domain() { }
+        public Domain()
+        {
+            values = new List<int>();
+        }
 
         public Domain(Domain other)
         {
@@ -51,20 +48,25 @@ namespace KillerSudokuSolver.HelperClasses.ModelClasses
 
     public class Variable
     {
-        public int Id;
-        public string Name;
-        public Domain Domain;
-        public int Value;
-        public bool IsSet;
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public Domain Domain { get; set; }
+        public int Value { get; set; }
+        public bool IsSet { get; set; }
 
-        public Variable() { }
+        public Variable()
+        {
+            Domain = new Domain();
+        }
 
         public Variable(Variable other)
         {
+            Id = other.Id;
             Name = other.Name;
             Domain = new Domain(other.Domain);
             Value = other.Value;
             IsSet = other.IsSet;
         }
     }
+
 }

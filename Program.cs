@@ -21,8 +21,10 @@ namespace KillerSudokuSolver
             for (int i = 0; i < 9 * 9; i++)
             {
                 var variable = new Variable();
+                variable.Id = i;
                 variable.Name = $"Cell {i}";
                 variable.Domain = new Domain(sudokuDomains);
+                variable.Value = 0;
                 sudoku.Variables.Add(variable);
             }
 
@@ -93,6 +95,7 @@ namespace KillerSudokuSolver
             killer.Solve();
 
             Console.WriteLine("END");
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }
